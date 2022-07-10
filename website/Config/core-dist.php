@@ -87,20 +87,25 @@ ini_set('max_execution_time', 600);
 // Configuración para la base de datos
 \sowerphp\core\Configure::write('database.default', array(
     'type' => 'PostgreSQL',
-    'user' => 'libredte',
-    'pass' => '',
-    'name' => 'libredte',
+    'host' => getenv('PGHOST') ?: '',
+    'port' => getenv('PGPORT') ?: '',
+    'user' => getenv('PGUSER') ?: 'libredte',
+    'pass' => getenv('PGPASSWORD') ?: '',
+    'name' => getenv('PGDATABASE') ?: 'libredte',
 ));
 
 // Configuración para el correo electrónico
 \sowerphp\core\Configure::write('email.default', array(
     'type' => 'smtp-phpmailer',
-    'host' => 'ssl://smtp.gmail.com',
-    'port' => 465,
-    'user' => '',
-    'pass' => '',
-    'from' => array('email'=>'', 'name'=>'LibreDTE'),
-    'to' => '',
+    'host' => getenv('MAILHOST') ?: 'ssl://smtp.gmail.com',
+    'port' => getenv('MAILPORT') ?: 465,
+    'user' => getenv('MAILUSER') ?: '',
+    'pass' => getenv('MAILPASS') ?: '',
+    'from' => array(
+        'email' => getenv('MAILFROM') ?: '',
+        'name' => getenv('MAILFROMNAMW') ?: 'LibreDTE'
+    ),
+    'to' => getenv('MAILTO') ?: '',
 ));
 
 // Módulos que utiliza la aplicación
@@ -137,7 +142,7 @@ ini_set('max_execution_time', 600);
 // configuración general del módulo DTE
 \sowerphp\core\Configure::write('dte', [
     // contraseña que se usará para encriptar datos sensibles en la BD
-    'pkey' => '', // DEBE ser de 32 chars
+    'pkey' => getenv('PKEY') ?: '', // DEBE ser de 32 chars
     // configuración de logos de las empresas
     'logos' => [
         'width' => 150,

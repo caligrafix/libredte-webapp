@@ -1,0 +1,45 @@
+services:
+  libredte-webapp-init:
+    build:
+      context: .
+      dockerfile: init.Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - PGHOST
+      - PGPORT
+      - PGPASSWORD
+
+  libredte-webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - PGHOST
+      - PGPORT
+      - PGPASSWORD
+      - MAILUSER
+      - MAILPASS
+      - MAILFROM
+      - PKEY
+    ports:
+      - "5000:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      libredte-webapp-init:
+        condition: service_completed_successfully
+      libredte-webapp-memcached:
+        condition: service_started
+
+  libredte-webapp-memcached:
+    image: memcached:1.6
+    restart: unless-stopped
+    expose:
+      - "11211"
+
+
+
+
+# PGHOST=host.docker.internal PGPORT=5433 PGPASSWORD=libredte MAILUSER=toto MAILPASS=toto MAILFROM=gpothier@gmail.com
